@@ -1,7 +1,7 @@
 #include <iostream>
 #define  STACKINITSIZE 15
 
-struct SqNode
+struct StackNode
 {
 	int *top;
 	int *base;
@@ -11,19 +11,19 @@ struct SqNode
 class StackClass
 {
 public:
-	bool initStack(SqNode* S);
+	bool initStack(StackNode* S);
 
-	bool clearStack(SqNode *S); 
+	bool clearStack(StackNode *S); 
 	
-	bool destroyStack(SqNode *S);
+	bool destroyStack(StackNode *S);
 
-	bool displayStack(SqNode *S);
+	bool displayStack(StackNode *S);
 
-	bool push(SqNode *S , int e);
+	bool push(StackNode *S , int e);
 
-	bool getTop(SqNode *S,int &e);
+	bool getTop(StackNode *S,int &e);
 
-	bool pop(SqNode *S, int & e);
+	bool pop(StackNode *S, int & e);
 
 private:
 
@@ -31,7 +31,7 @@ private:
 
 bool testStack()
 {
-	SqNode Sa ;
+	StackNode Sa ;
 	int e = 0;
 	StackClass stacktest;
 	stacktest.initStack(&Sa);
@@ -56,15 +56,17 @@ bool testStack()
 
 	stacktest.displayStack(&Sa);
 
+	stacktest.getTop(&Sa, e);
 
+	printf("getTop %d \r\n\t", e);
 
 	return true;
 }
 
 
-bool StackClass::initStack(SqNode* S)
+bool StackClass::initStack(StackNode* S)
 {
-	 S->base = (int *)malloc(STACKINITSIZE*sizeof(SqNode));
+	 S->base = (int *)malloc(STACKINITSIZE*sizeof(StackNode));
     if (S->base==NULL)
 	{
 		printf("Stack init error \r\n\t");
@@ -75,13 +77,13 @@ bool StackClass::initStack(SqNode* S)
 	return true;
 }
 
-bool StackClass::clearStack(SqNode *S)
+bool StackClass::clearStack(StackNode *S)
 {
 	S->top = S->base;
 	return true;
 }
 
-bool StackClass::destroyStack(SqNode *S)
+bool StackClass::destroyStack(StackNode *S)
 {
 	if (S->base == NULL)
 	{
@@ -93,7 +95,7 @@ bool StackClass::destroyStack(SqNode *S)
 	return true;
 }
 
-bool StackClass::displayStack(SqNode *S)
+bool StackClass::displayStack(StackNode *S)
 {
 	printf("display stack:\t");
 	if (S->base == NULL)
@@ -111,7 +113,7 @@ bool StackClass::displayStack(SqNode *S)
 	return true;
 }
 
-bool StackClass::push(SqNode *S , int e)
+bool StackClass::push(StackNode *S , int e)
 {
 	if (S->base==NULL) 
 	{
@@ -120,7 +122,7 @@ bool StackClass::push(SqNode *S , int e)
 	}
 	if (S->top - S->base == S->stacksize)
 	{
-		S->base = (int*)realloc(S->base, (S->stacksize+STACKINITSIZE)*sizeof(SqNode));
+		S->base = (int*)realloc(S->base, (S->stacksize+STACKINITSIZE)*sizeof(StackNode));
 		if (!S->base)
 		{
 			return false;
@@ -133,7 +135,7 @@ bool StackClass::push(SqNode *S , int e)
 	return true;
 }
 
-bool StackClass::pop(SqNode *S, int & e)
+bool StackClass::pop(StackNode *S, int & e)
 {
 	if (!S->base || S->base == S->top)
 	{
@@ -144,10 +146,13 @@ bool StackClass::pop(SqNode *S, int & e)
 	return  true;
 }
 
-bool StackClass::getTop(SqNode *S,int &e)
+bool StackClass::getTop(StackNode *S,int &e)
 {
 	if (S->top == S->base)
 	{
+		printf("getTop error ! \r\n\t");
+
+		e = -1;
 		return false;
 	}
 	e = *(S->top-1);

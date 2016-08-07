@@ -14,6 +14,7 @@
 
 #include "StackTest.h" //stack
 
+#include "QueueTest.h" //queue
 using namespace std;
 
 
@@ -89,9 +90,12 @@ void main()
    //测试顺序表
    //TestSqlist();
 
-   //testStack
-   testStack();
+   // ---testStack
+   // testStack();
 
+   //---testQueue
+   //TestQueue();  测试队列
+   TestCircularQueue();   //测试循环队列
 
    system("pause");
 
