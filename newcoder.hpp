@@ -1,8 +1,11 @@
+#pragma once
+#include<iostream>
+#include<vector>
+#include <stack>
 /*
-	大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项。
-n<=39 
+newcoder solutions
 */
-class Solution {
+class newSolution {
 public:
     /*
         大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项。
@@ -140,7 +143,7 @@ public:
      请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
      左下角开始找
      */
-     bool Find(vector<vector<int> > array,int target) {
+     bool Find(std::vector<std::vector<int> > array,int target) {
       int  rowNum = array.size(); 
       int  colNum = array[0].size() ;
       int  col = 0 , row = rowNum-1 ;
@@ -168,12 +171,187 @@ public:
         请实现一个函数，将一个字符串中的空格替换成“%20”。
         例如，当字符串为We Are Happy.则经过替换之后的字符串为We%20Are%20Happy。
     */
-    void replaceSpace(char *str,int length) {
+    void replaceSpace(char *str,int length) 
+	{
+		int lenthOld = strlen(str); 
+		for (int i = 0; i < lenthOld; i++)
+		{
+			printf("%c", str[i]);
+		}
+		printf("\n");
+		int count = 0; //sapce count
+		for (int i = 0; i < lenthOld; i++)
+		{
+			if (str[i] == ' ')
+			{
+				count++;
+			}
+
+			i++;
+		}
+		int lengthNew = lenthOld + 2 * count -1;  //1+2->3 -1 dute to from zero;
+		
+		for (int i = lenthOld - 1; i >= 0 && lengthNew != i; --i)
+		{
+			if (str[i] == ' ')
+			{
+				str[lengthNew--] = '0';
+				str[lengthNew--] = '2';
+				str[lengthNew--] = '%';
+			}
+			else
+			{
+				str[lengthNew--] = str[i];
+			}
+			
+		}
+		std::cout << "\n print relpaceStr: \n";
+		int lentghUptodate = strlen(str);
+		for (int i = 0; i < lentghUptodate; i++)
+		{
+			printf("%c", str[i]);
+		}
+		printf("\n");
 
     }
+	
+	
+	  struct ListNode {
+	        int val;
+	        struct ListNode *next;
+	        ListNode(int x) :
+	              val(x), next(NULL) {
+	        }
+	  };
+	
+	  /*
+		从尾到头打印链表  尾->头
+		（1）stack
+		（2）递归
+	  */
+	std::vector<int> printListFromTailToHead(struct ListNode* head) 
+	{
+		//先进后出
+		std::stack<int> storeStack;
+		while (NULL != head)
+		{
+			storeStack.push(head->val);
+			head = head->next;
+		}
+		std::vector<int> retVec;
+		while (!storeStack.empty())
+		{
+			retVec.push_back(storeStack.top());
+			storeStack.pop();
+		}
 
+		return retVec;
+
+
+		//递归
+		//std::vector<int> vecHold;
+		//while (NULL != head)
+		//{
+		//	 printListFromTailToHead(head->next);
+		//}
+		//vecHold.push_back(head->val);
+		//return vecHold;
+	}
+
+
+	
+	
+	 struct TreeNode {
+	     int val;
+	     TreeNode *left;
+	     TreeNode *right;
+	     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+	 
+	
+	/*
+		输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+		例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+		中序遍历的根节点位置在中间p
+	*/
+	struct TreeNode* reConstructBinaryTree(std::vector<int> pre, std::vector<int> in) 
+	{
+		int inSize = in.size();
+		if (inSize == 0)
+		{
+			return NULL;
+		}
+
+		std::vector<int> pre_left, pre_right, in_left, in_right;
+
+		int val = pre[0];
+
+		TreeNode* Node = new TreeNode(val); //root node is the first node of the pre
+				
+		int InRootTemp = 0;
+		for (; InRootTemp < inSize ; ++InRootTemp )
+		{
+			if (val == in[InRootTemp])  //find the root position in the in 
+			{
+				break;
+			}
+		}
+
+		//assignment for pre and in ;
+		for (int i = 0; i < inSize; ++i)
+		{
+			if (i < InRootTemp)
+			{
+				in_left.push_back(in[i]);
+				pre_left.push_back(pre[i+1]);   //i+1 
+			}
+			else if (i >InRootTemp)
+			{
+				in_right.push_back(in[i]);
+				pre_right.push_back(pre[i]);
+			}		
+		}
+
+		Node->left = reConstructBinaryTree(pre_left, in_left);
+		Node->right = reConstructBinaryTree(pre_right, in_right);
+		
+		return Node;
+	}
+
+
+	/*
+		递归打印后序二叉树
+	*/
+	void post_tree(TreeNode * Root)
+	{
+		if (Root!= NULL)
+		{
+			post_tree(Root->left);
+			post_tree(Root->right);
+			printf("%d ", Root->val);
+		}	
+	}
 
 
 
 
 };  
+
+
+
+
+
+bool TestNewSolution()
+{
+	newSolution solutionIns;
+	//空格替换
+	//char str[20] = "We are happy!";
+	//solutionIns.replaceSpace(str, 1000);
+
+	//从尾到头输出列表
+	
+
+
+
+
+	return true;
+}

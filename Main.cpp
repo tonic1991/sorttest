@@ -15,6 +15,8 @@
 #include "StackTest.h" //stack
 
 #include "QueueTest.h" //queue
+
+#include "newcoder.hpp" //newcoder
 using namespace std;
 
 
@@ -81,7 +83,7 @@ void main()
    //trieTree->FindInTrieTree("A");
    //trieTree->PrintPre("C");
   
-   SwordTo swordto;
+	 //SwordTo swordto;
    //swordto.Print1ToMaxOfDigits(3); //打印从1到N位数
    //swordto.YangHuiTriangle(5);
    //swordto.MallocText();// 最大打印内存
@@ -95,7 +97,10 @@ void main()
 
    //---testQueue
    //TestQueue();  测试队列
-   TestCircularQueue();   //测试循环队列
+   //TestCircularQueue();   //测试循环队列
+
+   //--test-newcoder
+   TestNewSolution();
 
    system("pause");
 
