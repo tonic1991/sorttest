@@ -2,6 +2,7 @@
 #include<iostream>
 #include<vector>
 #include <stack>
+#include <queue>
 /*
 newcoder solutions
 */
@@ -137,13 +138,13 @@ public:
          return count;
      }
 
-     /*
+    /*
      在一个二维数组中，每一行都按照从左到右递增的顺序排序，
      每一列都按照从上到下递增的顺序排序。
      请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
      左下角开始找
      */
-     bool Find(std::vector<std::vector<int> > array,int target) {
+    bool Find(std::vector<std::vector<int> > array,int target) {
       int  rowNum = array.size(); 
       int  colNum = array[0].size() ;
       int  col = 0 , row = rowNum-1 ;
@@ -261,82 +262,223 @@ public:
 
 	
 	
-	 struct TreeNode {
-	     int val;
-	     TreeNode *left;
-	     TreeNode *right;
-	     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-	 
+	struct TreeNode {
+		int val;
+		TreeNode *left;
+		TreeNode *right;
+		TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+	};
 	
 	/*
 		输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
 		例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
 		中序遍历的根节点位置在中间p
-	*/
-	struct TreeNode* reConstructBinaryTree(std::vector<int> pre, std::vector<int> in) 
+		*/
+struct TreeNode* reConstructBinaryTree(std::vector<int> pre, std::vector<int> in)
+{
+	int inSize = in.size();
+	if (inSize == 0)
 	{
-		int inSize = in.size();
-		if (inSize == 0)
-		{
-			return NULL;
-		}
-
-		std::vector<int> pre_left, pre_right, in_left, in_right;
-
-		int val = pre[0];
-
-		TreeNode* Node = new TreeNode(val); //root node is the first node of the pre
-				
-		int InRootTemp = 0;
-		for (; InRootTemp < inSize ; ++InRootTemp )
-		{
-			if (val == in[InRootTemp])  //find the root position in the in 
-			{
-				break;
-			}
-		}
-
-		//assignment for pre and in ;
-		for (int i = 0; i < inSize; ++i)
-		{
-			if (i < InRootTemp)
-			{
-				in_left.push_back(in[i]);
-				pre_left.push_back(pre[i+1]);   //i+1 
-			}
-			else if (i >InRootTemp)
-			{
-				in_right.push_back(in[i]);
-				pre_right.push_back(pre[i]);
-			}		
-		}
-
-		Node->left = reConstructBinaryTree(pre_left, in_left);
-		Node->right = reConstructBinaryTree(pre_right, in_right);
-		
-		return Node;
+		return NULL;
 	}
 
+	std::vector<int> pre_left, pre_right, in_left, in_right;
 
-	/*
-		递归打印后序二叉树
-	*/
-	void post_tree(TreeNode * Root)
+	int val = pre[0];
+
+	TreeNode* Node = new TreeNode(val); //root node is the first node of the pre
+
+	int InRootTemp = 0;
+	for (; InRootTemp < inSize; ++InRootTemp)
 	{
-		if (Root!= NULL)
+		if (val == in[InRootTemp])  //find the root position in the in 
 		{
-			post_tree(Root->left);
-			post_tree(Root->right);
-			printf("%d ", Root->val);
-		}	
+			break;
+		}
 	}
 
+	//assignment for pre and in ;
+	for (int i = 0; i < inSize; ++i)
+	{
+		if (i < InRootTemp)
+		{
+			in_left.push_back(in[i]);
+			pre_left.push_back(pre[i + 1]);   //i+1 
+		}
+		else if (i >InRootTemp)
+		{
+			in_right.push_back(in[i]);
+			pre_right.push_back(pre[i]);
+		}
+	}
+
+	Node->left = reConstructBinaryTree(pre_left, in_left);
+	Node->right = reConstructBinaryTree(pre_right, in_right);
+
+	return Node;
+}
+
+
+/*
+	递归打印后序二叉树
+	*/
+void post_tree(TreeNode * Root)
+{
+	if (Root != NULL)
+	{
+		post_tree(Root->left);
+		post_tree(Root->right);
+		printf("%d ", Root->val);
+	}
+}
+
+/*
+		把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+		输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。
+		例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
+		NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
+		*/
+int minNumberInRotateArray(vector<int> rotateArray)
+{
+	if (rotateArray.empty())
+	{
+		return 0;
+	}
+	int mid, left = 0, right = rotateArray.size() - 1;
+	//根据特点用二分法找
+	while (right - left != 1)
+	{
+		mid = left + (right - left) / 2;
+		if (rotateArray[left] <= rotateArray[mid])
+		{
+			left = mid;
+		}
+		else
+		{
+			right = mid;
+		}
+	}
+	return rotateArray[right] > rotateArray[left] ? rotateArray[left] : rotateArray[right];
+}
+
+/*
+	输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，
+	所有的偶数位于位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+	（1）类似插入排序
+	（2）第二个思路：再创建一个临时数组 ， 遇见偶数加入新数组的同时在老数组中删除该值，将新数组添加到老数组里
+*/
+void reOrderArray(vector<int> &array)
+{
+	if (array.empty())
+	{
+		return;
+	}
+	//考虑奇偶位置 插入排序
+	for (size_t i = 0; i < array.size(); ++i)
+	{
+		if( (array[i]%2 )==1)
+		{
+			int temp = array[i];
+			int j = i - 1;
+			while (j>=0 && (array[j]%2)==0 )
+			{
+				array[j + 1] = array[j];
+				j--;
+			}
+			array[j + 1] = temp;
+		}
+
+	}
+
+	
+}
 
 
 
 };  
 
 
+	 /*
+		two stacks make a queue, implement
+	 */
+	 class TwoStackQueue
+	 {
+	 public:
+		 void enQueue(int node) 
+		 {
+			 stack1.push(node);
+		 }
+
+		 int deQueue() 
+		 {
+			 while (!stack1.empty())
+			 {
+				 stack2.push(stack1.top());
+				 stack1.pop();
+			 }
+			 if (stack2.empty())
+			 {
+				 throw "pop empty stack";
+			 }
+			 else 
+			 {
+				 int ret = stack2.top();
+				 stack2.pop();
+				while (!stack2.empty())
+				 {
+					 stack1.push(stack2.top());
+					 stack2.pop();
+				 }
+				 return ret;
+			 }
+		 }
+
+	 private:
+		 std::stack<int> stack1;
+		 std::stack<int> stack2;
+	 };
+
+	 /*
+		two queues make a stack. 
+	 */
+	 class TwoQueueStack
+	 {
+	 public:
+		void push(int node)
+		{
+			queue1.push(node);		
+		}
+		 
+		int pop()
+		{
+			int ret = 0;
+			if (queue1.empty())
+			{
+				throw "queue pop error! \n";
+			}
+			else
+			{ 
+				while (!queue1.empty())
+				{
+					ret = queue1.front();
+					queue1.pop();
+					queue2.push(ret);
+				}
+				while (queue2.size() > 1)
+				{
+					queue1.push(queue2.front());
+					queue2.pop();
+				}
+				queue2.pop();
+
+				return ret;
+			}		
+		}
+	 
+	 private:
+		 std::queue<int> queue1;
+		 std::queue<int> queue2;
+	 };
 
 
 
@@ -349,9 +491,16 @@ bool TestNewSolution()
 
 	//从尾到头输出列表
 	
+	TwoQueueStack qStack;
+	qStack.push(1);
+	qStack.push(2);
+	int a = qStack.pop();
+	qStack.push(3);
+	qStack.push(4);
+	int b = qStack.pop();
+	int c = qStack.pop();
 
-
-
+	std::cout<< a << b << c << std::endl;
 
 	return true;
 }

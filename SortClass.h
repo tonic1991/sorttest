@@ -61,8 +61,6 @@ public:
 	//∏¥‘”∂» O(n2)
 	void InsertSort(int a[], int n)		
 	{	
-
-
 		cout<<"InsertSort Test:  "<<endl;
 		for (int i =1 ; i<n ; i++ )
 		{
