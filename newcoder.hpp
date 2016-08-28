@@ -440,7 +440,8 @@ struct ListNode {
 	   ListNode *next = NULL;
 	   while(pHead!=NULL)
 	   {
-
+   
+   
 		   next = pHead->next;
 		   pHead->next = pre;
 		   pre = pHead;
