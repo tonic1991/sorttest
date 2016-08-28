@@ -338,7 +338,7 @@ void post_tree(TreeNode * Root)
 		例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
 		NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
 		*/
-int minNumberInRotateArray(vector<int> rotateArray)
+int minNumberInRotateArray(std::vector<int> rotateArray)
 {
 	if (rotateArray.empty())
 	{
@@ -367,7 +367,7 @@ int minNumberInRotateArray(vector<int> rotateArray)
 	（1）类似插入排序
 	（2）第二个思路：再创建一个临时数组 ， 遇见偶数加入新数组的同时在老数组中删除该值，将新数组添加到老数组里
 */
-void reOrderArray(vector<int> &array)
+void reOrderArray(std::vector<int> &array)
 {
 	if (array.empty())
 	{
@@ -394,6 +394,68 @@ void reOrderArray(vector<int> &array)
 }
 
 
+struct ListNode {
+	int val;
+	struct ListNode *next;
+	ListNode(int x) :
+			val(x), next(NULL) {
+	}
+};
+
+/*
+	输入一个链表，输出倒数第k个指针
+	1.可以考虑存进栈中再取出来，这个是不可以的，因为链表改变了就改变了。
+	2.考虑跟随，一个链表先走k步，如果为空，后面的输出
+*/
+   ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) 
+   {
+	    if (pListHead==NULL||k<0) return NULL;
+	    ListNode *preNode = pListHead;
+		ListNode *followNode  = pListHead;
+		//先跑k步
+		for (int i = 0; i < k; i++)
+		{
+			if(preNode -> next == NULL) return NULL;
+			else
+			{
+				preNode = preNode->next;
+			}			
+		}
+		while (preNode!=NULL)
+		{
+			preNode = preNode->next;
+			followNode = followNode->next;
+		}
+		return followNode;
+    }
+
+   /*
+	  输入一个链表，反转链表后，输出链表的所有元素。
+      第一时间栈的都是傻逼
+	  考虑逐步反转！！！
+   */
+   ListNode* ReverseList(ListNode* pHead) 
+   {
+	   ListNode *pre  = NULL;
+	   ListNode *next = NULL;
+	   while(pHead!=NULL)
+	   {
+
+		   next = pHead->next;
+		   pHead->next = pre;
+		   pre = pHead;
+		   pHead = next;
+		   
+	   }
+	   return pre;
+   }
+ /*
+	输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。
+ */
+   ListNode* Merge(ListNode* pHead1, ListNode* pHead2)
+   {
+
+   }
 
 };  
 
