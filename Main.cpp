@@ -16,7 +16,7 @@
 
 #include "QueueTest.h" //queue
 
-#include "newcoder.hpp" //newcoder
+#include "NewCoders.hpp"
 
 using namespace std;
 

@@ -590,7 +590,7 @@ void reOrderArray(std::vector<int> &array)
 
 	   while (left<=right&&top<=buttom)
 	   {
-	   	   //move ringt
+	   	   //move right
 		   for (int i = left;i<=right;++i)
 			   retVec.push_back(matrix[top][i]);
 		   //move dowm
@@ -609,7 +609,28 @@ void reOrderArray(std::vector<int> &array)
 	   return retVec;
    }
 
-
+   /*
+   输入两个整数序列，第一个序列表示栈的压入顺序，
+   请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，
+   序列4，5,3,2,1是该压栈序列对应的一个弹出序列，
+   但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
+   思路： 准备辅助栈，首先按入栈顺序压栈，如果辅助栈顶与弹出序列相同，则弹出，否则继续压
+   */
+   bool IsPopOrder(vector<int> pushV, vector<int> popV) 
+   {
+	   if (pushV.empty()) return false;
+	   stack<int> stacktemp;
+	   for (unsigned int i = 0 , j = 0 ; i <pushV.size() ; ++i)
+	   {
+		   stacktemp.push(pushV[i]);
+		   while (j< popV.size()&&stacktemp.top()== popV[j])
+		   {
+			   stacktemp.pop();
+			   j++;
+		   }
+	   }
+	   return stacktemp.empty();
+   }
 };  
 
 
@@ -696,6 +717,50 @@ void reOrderArray(std::vector<int> &array)
 	 };
 
 
+
+	 /*
+	 定义栈的数据结构，请在该类型中实现一个能够得到栈最小元素的min函数。
+	 */	 
+	 class StackWithMin 
+	 {
+		
+		 std::stack<int> m_data;
+		 std::stack<int> m_min;
+	  public:
+		 void push(int value) {
+			 m_data.push(value);
+
+			 if (m_min.empty())
+			 {
+				 m_min.push(value);
+			 }
+			 else if (m_min.top() < value)
+			 {
+				 m_min.push(m_min.top());
+			 }
+			 else if (m_min.top() >= value)
+			 {
+				 m_min.push(value);
+			 }
+		 }
+		 void pop() {
+			 if (m_data.empty() ) return;
+
+			 m_data.pop();
+			 m_min.pop();
+		 }
+		 int top() {
+			 if (m_data.empty()) return;
+
+			 return m_data.top();
+
+		 }
+		 int min() 
+		 {
+			 if (m_data.empty()) return;
+			 return m_min.top();
+		 }
+	 };
 
 bool TestNewSolution()
 {
