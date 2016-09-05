@@ -3,6 +3,13 @@
 #include<vector>
 #include <stack>
 #include <queue>
+#include <assert.h>
+#include <string>
+#include <algorithm>
+
+#include <set>
+#include <map>
+
 /*
 newcoder solutions
 */
@@ -269,11 +276,7 @@ public:
 		//vecHold.push_back(head->val);
 		//return vecHold;
 	}
-
-
-	
-	
-	
+		
 	/*
 		输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
 		例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
@@ -631,6 +634,385 @@ void reOrderArray(std::vector<int> &array)
 	   }
 	   return stacktemp.empty();
    }
+
+   /*
+       输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）
+	   分析：肯定需要用到递归的思路，考虑树的结构，需要另外一个函数来判定并且递归。
+   */
+   bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2)
+   {
+	   if (pRoot1 == NULL || pRoot2 == NULL) return false;
+		  
+	   return isTreeAHasTreeB(pRoot1, pRoot2)|| HasSubtree(pRoot1->left, pRoot2) || HasSubtree(pRoot1->right, pRoot2);
+   }
+   //重点为在递归环境下判断是否为子树！
+   bool isTreeAHasTreeB(TreeNode *pRoot1, TreeNode *pRoot2)
+   {
+	   if (pRoot2 == NULL)
+		   return true;
+	   if (pRoot1 == NULL)
+		   return false;
+	   if (pRoot1->val != pRoot2->val)
+		   return false;
+	   return isTreeAHasTreeB(pRoot1->left, pRoot2->left) && isTreeAHasTreeB(pRoot1->right, pRoot2->right);
+	}
+
+   /*
+   从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+   分析，层次遍历二叉树， 打印根，然后存进队列， 然后left right 存进队列，每一个均这样，
+   直到为null即存在一个递归过程？
+   */
+   std::vector<int> PrintFromTopToBottom(TreeNode *root) 
+   {
+	   vector<int> retVec;
+	   if (root == NULL) return retVec;
+
+	   std::deque<TreeNode*> nodeQueue; //存储二叉树节点；
+	   nodeQueue.push_back(root);
+
+	   while (!nodeQueue.empty())
+	   {
+		   TreeNode* temp = nodeQueue.front();
+		   nodeQueue.pop_front();
+
+		   retVec.push_back(temp->val);
+		   if (temp->left)
+		   {
+			   nodeQueue.push_back(temp->left);
+		   }
+		   if (temp->right)
+		   {
+			   nodeQueue.push_back(temp->right);
+		   }
+	   }
+	   return retVec;
+   }
+
+   /*
+		输入一个整数数组，判断该数组是不是某二叉搜索树(排序特征)的后序遍历的结果。
+		如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
+		分析：
+		(1)存入二叉树，分出左右子树，对右子树做判断，然后递归左右子树；
+		(2)非常好的锻炼二叉树思维；可以尝试用迭代器做
+   */
+   bool VerifySquenceOfBST(std::vector<int> sequence)
+   {
+	   int root = sequence.back();
+
+	   //找左边
+	   unsigned int i = 0;
+	   vector<int> leftTemp;
+	   for (; i < sequence.size() - 1; i++)
+	   {
+		   leftTemp.push_back(sequence[i]);
+		   if (sequence[i] > root)
+		   {
+			   leftTemp.pop_back();
+			   break;
+		   }
+	   }
+
+	   //找右子树
+	   unsigned int j = i;
+	   vector<int> rightTemp;
+	   for (; j < sequence.size() - 1; j++)
+	   {
+		   rightTemp.push_back(sequence[j]);
+		   if (sequence[j] < root)
+		   {
+			   return false;
+		   }
+	   }
+
+	   //递归，
+	   bool left = true;
+	   if (!leftTemp.empty())
+	   {
+		   left = VerifySquenceOfBST(leftTemp);
+	   }
+	   bool right = true;  //防止为空
+	   if (!rightTemp.empty())
+	   {
+		   right = VerifySquenceOfBST(rightTemp);
+	   }
+	   return left&&right;
+   }
+
+   /*
+   输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。
+   路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。
+   分析：从根开始，则用到了先序遍历的知识，其次考虑递归，考虑递归返回条件。
+   */
+   std::vector<std::vector<int>> FindPath(TreeNode* root, int expectNumber) 
+   {
+	   std::vector<std::vector<int>> pathVec;
+	   std::vector<int> tempPath;
+	   int currentSum;
+	   if(root) FindPathHelper(root, expectNumber, pathVec, tempPath, currentSum );
+	   return pathVec;
+   }
+   //类似先序遍历的算法，加上判断叶子节点与维护currentSum,维护 pathVec;
+   void FindPathHelper
+   (   TreeNode* root, int expectNumber, std::vector<std::vector<int>> &pathVec,
+       std::vector<int> &tempPath,   int currentSum 
+   )
+   {
+	   currentSum += root->val;  //加上当前值；
+	   tempPath.push_back(root->val);
+	   //
+	   if (currentSum == expectNumber && root->left == NULL && root->right )
+	   {
+		   pathVec.push_back(tempPath);//满足条件存储进去；
+	   }
+	   else
+	   {
+		   if (root->left)
+		   {
+			   FindPathHelper(root, expectNumber, pathVec, tempPath, currentSum);
+		   }
+
+		   if (root->right)
+		   {
+			   FindPathHelper(root, expectNumber, pathVec, tempPath, currentSum);
+		   }
+
+	   }
+
+	   
+	   //currentSum不用管
+	   tempPath.pop_back(); //都不满足，则退一步
+   }
+
+   /*
+		输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。
+		要求不能创建任何新的结点，只能调整树中结点指针的指向。
+		分析：考虑一个二叉搜索树与双向链表均为两个指针将left，right转换为指向排序前后即可。
+		考虑到二叉搜索树的排序特征。考虑用递归。
+   */
+   TreeNode* Convert(TreeNode* pRootOfTree)
+   {
+	   TreeNode* pLastNodeInList = NULL;  //指向双向链表的尾节点；
+	   ConvertNodehelper(pRootOfTree, &pLastNodeInList);
+	   
+	   //回来到头节点
+	   TreeNode * pHeadOfList = pLastNodeInList;
+	   while (pHeadOfList!= NULL&& pHeadOfList->left !=NULL)
+	   {
+		   pHeadOfList = pHeadOfList->left;
+	   }
+	   return pHeadOfList;
+   }
+
+   void ConvertNodehelper(TreeNode* pNode, TreeNode** pLastNodeInList)
+   {
+	   if (pNode == NULL) return;  //如果为空，返回
+		
+	   TreeNode * pCurrentNode = pNode;
+
+	   if (pCurrentNode ->left != NULL)
+	   {
+		   ConvertNodehelper(pCurrentNode->left, pLastNodeInList);
+	   }
+
+	   pCurrentNode->left = *pLastNodeInList;  //连接左子树最右边；
+	   if (*pLastNodeInList!= NULL)
+	   {
+		   (*pLastNodeInList)->right = pCurrentNode;
+	   }
+
+	   *pLastNodeInList = pCurrentNode; //现在转换一个，将当前节点转换为双向链表最后一个节点。
+
+	   if (pCurrentNode->right!= NULL)
+	   {
+		   ConvertNodehelper(pCurrentNode->right, pLastNodeInList);
+	   }
+   }
+
+
+   /* 字符串的排列
+	输入一个字符串,按字典序打印出该字符串中字符的所有排列。
+	例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所
+	有字符串abc,acb,bac,bca,cab和cba。 结果请按字母顺序输出
+
+	分析：（1）考虑，假如固定第一个字符，将后面的字符做排列（逐个交换）。
+	（2）即将字符串分为两个部分，第一个字符和后面的，然后逐个后面的与第一个字符交换；
+	（3）然后固定第一个字符，后交换后面的。
+	（4）每次交换，递归-之后需要换回来
+
+   */
+   std::vector<std::string> Permutation(std::string str) 
+   {
+	   std::vector<std::string> retVecString;
+	   if (str.empty()) return retVecString;
+	   size_t pos = 0;
+
+	   permutation(retVecString, str, pos);
+	   
+	   std::sort(retVecString.begin(), retVecString.end());  //按字典顺序输出；
+
+	   return retVecString;  
+   }
+
+   void permutation(std::vector<std::string> &retVecString, std::string str, size_t pos)
+   {
+	   if (pos == str.size()-1)   //返回条件，换到了最后一个
+	   {
+		   retVecString.push_back(str);
+	   }
+	   else
+	   {
+		   for (size_t i = pos ; i< str.size() ;++ i)
+		   {
+			   if (str[i] == str[pos] && i != pos )  //有重复字符时，跳过
+			   {
+				   continue;
+			   }
+			   //交换
+			   std::swap(str[i], str[pos]);
+
+			   permutation(retVecString, str, pos + 1);  //确定了固定下一个开始交换；
+
+			   std::swap(str[i], str[pos]);
+		   }
+	   }
+   }
+
+   /*
+       数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+	   例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，
+	   超过数组长度的一半，因此输出2。如果不存在则输出  0 。
+	   (1)简单的思路排序，找中位数。那么，时间复杂度O(n);
+	   (2)直接找中位数。(中快排中的partition)
+
+	   方法二：不修改的方式，加标志位：当前数字，次数。维护次数
+   */
+   int MoreThanHalfNum_Solution(std::vector<int> numbers) 
+   {
+	   if (numbers.empty()) return 0; //输入错误  。。 或者没有超过一半的
+	  
+	   int length = numbers.size()-1;
+	   int middle = length >> 1;   //中间位置
+	   int low = 0; 
+	   int high = length - 1;
+	   int index = partition(numbers, low , high);
+	   while (index != middle)
+	   {
+		   if (index > middle)
+		   {
+			   high = middle - 1;
+			   index = partition(numbers, low, high);
+		   }
+		   else if (index <middle)
+		   {
+			   low = middle;
+			   index = partition(numbers, low, high);
+		   }
+	   }
+	   return  checkTheNumber(numbers, numbers[middle]);
+   }
+
+   int checkTheNumber(std::vector<int> numbers, int checkNum)
+   {
+	   int times = 0;
+	   
+	   for (std::vector<int>::const_iterator ita = numbers.begin(); ita != numbers.end();++ita)
+	   {
+		   if (*ita == checkNum)
+		   {
+			   times++;
+		   }
+	   }
+	   return times * 2 > numbers.size() ? checkNum : 0;
+   }
+
+   void swap(int &a, int &b)
+   {
+	   int temp = a;
+	   a = b;
+	   b = temp;   
+   }
+
+   int  partition(vector<int> &numbers, int low, int high)
+   {
+       int privotKey = numbers[low];
+	   while (low<high)
+	   {
+		   while (low < high && numbers[high] >= privotKey) --high;
+		   swap(numbers[low], numbers[high]);
+		   while (low < high && numbers[low] <= privotKey) ++low;
+		   swap(numbers[low], numbers[high]);
+	   }
+	   return low;   
+   }
+
+   //数组中多余一半的数字
+   int MoreThanHalfNum(std::vector<int> numbers)
+   {
+	   if (numbers.empty())   return 0;
+	   int tempNum ;  // 暂存数
+	   int times = 0;    //次数
+	   
+	   for (std::vector<int>::const_iterator ita = numbers.begin(); ita != numbers.end(); ++ita)
+	   {
+			if (times == 0)
+			{
+				times = 1;
+				tempNum = *ita;
+			}
+			else if (*ita == tempNum)
+			{
+				times++;
+			}
+			else
+			{
+				times--;
+			}
+	   }
+
+	   return checkTheNumber(numbers , tempNum);
+   }
+
+   /*
+	  找出数组中最小的k个数
+	  分析：简单的方法，排序sort，前k个数；
+	  方法2;利用partition. O(n)
+	  方法三：O(nlogk)
+   */
+   std::vector<int> GetLeastNumbers_Solution(vector<int> input, int k) 
+   {
+	   std::vector<int> leastNumbers;
+	   if (input.empty() || input.size() < k || k <= 0) return leastNumbers;
+
+	   int low = 0; 
+	   int high = input.size() -1;
+	   int index = partition(input, low, high);  //此处的partition必须参数input为引用
+	   while (index!=k -1)
+	   {
+		   if (index >k -1)
+		   {
+			   high = index - 1;
+			   index = partition(input, low, high);
+		   }
+		   else
+		   {
+			   low = index+1;
+			   index = partition(input, low, high);
+		   }
+	   }
+	   return std::vector<int>(input.begin(), input.begin()+k);
+   }
+   //方法三:利用set实现，multiset
+   std::vector<int> GetLeastNumber(vector<int> input, int k)
+   {
+	   std::set<int> leastNumbers;
+		
+   }
+
+
+
+
+
+
 };  
 
 
@@ -744,20 +1126,20 @@ void reOrderArray(std::vector<int> &array)
 			 }
 		 }
 		 void pop() {
-			 if (m_data.empty() ) return;
+			 assert(m_data.empty());
 
 			 m_data.pop();
 			 m_min.pop();
 		 }
 		 int top() {
-			 if (m_data.empty()) return;
+			 assert(m_data.empty());
 
 			 return m_data.top();
 
 		 }
 		 int min() 
 		 {
-			 if (m_data.empty()) return;
+			 assert(m_data.empty());
 			 return m_min.top();
 		 }
 	 };
@@ -770,17 +1152,24 @@ bool TestNewSolution()
 	//solutionIns.replaceSpace(str, 1000);
 
 	//从尾到头输出列表
-	
-	TwoQueueStack qStack;
-	qStack.push(1);
-	qStack.push(2);
-	int a = qStack.pop();
-	qStack.push(3);
-	qStack.push(4);
-	int b = qStack.pop();
-	int c = qStack.pop();
+	//TwoQueueStack qStack;
+	//qStack.push(1);
+	//qStack.push(2);
+	//int a = qStack.pop();
+	//qStack.push(3);
+	//qStack.push(4);
+	//int b = qStack.pop();
+	//int c = qStack.pop();
+	//std::cout<< a << b << c << std::endl;
 
-	std::cout<< a << b << c << std::endl;
+	//输出最小的k个树
+	int array[] = { 4, 5, 1, 6, 2, 7, 3, 8 };
+	int arrLen = sizeof(array) / sizeof(int);
+	std::vector<int> vecInput = std::vector<int>(array, array + arrLen);
+	std::vector<int> retvec = solutionIns.GetLeastNumbers_Solution(vecInput, 4);
+
+	
+
 
 	//solutionIns.
 	return true;
