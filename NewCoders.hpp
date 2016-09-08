@@ -9,6 +9,8 @@
 
 #include <set>
 #include <map>
+#include<functional>
+
 
 /*
 newcoder solutions
@@ -877,6 +879,42 @@ void reOrderArray(std::vector<int> &array)
 	   }
    }
 
+   /*组合*/
+   void Combination(char *string)
+   {
+	   assert(string != NULL);
+	   vector<char> result;
+	   int i, length = strlen(string);
+	   for (i = 1; i <= length; ++i)
+		   Combination(string, i, result);
+   }
+
+   void Combination(char *string, int number, vector<char> &result)
+   {
+	   assert(string != NULL);
+	   if (number == 0)
+	   {
+		   static int num = 1;
+		   printf("第%d个组合\t", num++);
+
+		   vector<char>::iterator iter = result.begin();
+		   for (; iter != result.end(); ++iter)
+			   printf("%c", *iter);
+		   printf("\n");
+		   return;
+	   }
+	   if (*string == '\0')
+		   return;
+	   result.push_back(*string);
+	   Combination(string + 1, number - 1, result);
+	   result.pop_back();
+	   Combination(string + 1, number, result);
+   }
+
+
+
+
+
    /*
        数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
 	   例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，
@@ -1001,15 +1039,234 @@ void reOrderArray(std::vector<int> &array)
 	   }
 	   return std::vector<int>(input.begin(), input.begin()+k);
    }
+
    //方法三:利用set实现，multiset
+   //快的原因，set实现插入删除为O(logk)
+   //考虑海量数据的原因，不能直接将vec插入set而是按需求
    std::vector<int> GetLeastNumber(vector<int> input, int k)
    {
-	   std::set<int> leastNumbers;
-		
+	   std::vector<int> leastVec;
+	   if (input.empty() || input.size() < k || k <= 0) return std::vector<int>();
+
+	   //仿函数greater<int> 从大到小排序
+	   std::multiset<int , std::greater<int>> leastSet;
+
+	   for (vector<int>::iterator ita = input.begin() ; ita!=input.end();++ita)
+	   {
+		   if (leastSet.size()<k)
+		   {
+			   leastSet.insert(*ita);
+		   }
+		   else
+		   {
+			   multiset<int, greater<int> >::iterator greatest_it = leastSet.begin();
+			   if (*ita < *greatest_it)
+			   {
+				   leastSet.erase(*greatest_it);
+				   leastSet.insert(*ita);
+			   }
+		   }
+	   }
+	   return std::vector<int>(leastSet.begin(),leastSet.end());		
    }
 
 
+   /*
+	  计算连续子向量的最大和。
+	  但是,如果向量中包含负数,是否应该包含某个负数,并期望旁边的正数会弥补它呢？
+	  例如:{6,-3,-2,7,-15,1,2,2},连续子向量的最大和为8(从第0个开始,到第3个为止)。
+	  分析:没有要求求出该连续子数组；只需要求出该最大值； 
+      （2）动态规划法
+   */
+   int FindGreatestSumOfSubArray(std::vector<int> array)
+   {
+	   if (array.empty()) return 0;
 
+	   int TempSum = 0;
+	   int GreatSum = array[0];
+	   for(unsigned int i = 0 ; i <array.size() ; ++i)
+	   {
+		   if (TempSum<0)
+		   {
+			   TempSum = array[i];
+		   }
+		   else
+		   {
+			   TempSum += array[i];
+		   }
+
+		   if (TempSum>GreatSum)
+		   {
+			   GreatSum = TempSum;
+		   }
+	   }
+	   return GreatSum;
+   }
+
+   /*
+   整数中1出现的次数（从1到n整数中1出现的次数）
+   数了一下1~13中包含1的数字有1、10、11、12、13因此共出现6次
+   分析:(1)用蠢办法，一个个遍历分析位。
+   */
+   int NumberOf1Between1AndN_Solution(int n)
+   {
+	   if (n < 1) return 0;
+
+	   int timesOfOne = 0;
+	   for (int i = 1 ; i <= n ; i++)
+	   {
+		   timesOfOne += NumberOf1Bit(i);
+	   }
+
+	   return timesOfOne;
+   }
+   //求该数中1的位数。
+   int NumberOf1Bit(int n)
+   {
+	   int retNumber = 0;
+	   while (n != 0)
+	   {
+		   int tempBit = n % 10;  //余数
+		   if (tempBit ==1)
+		   {
+			   retNumber++;
+		   }
+		   n = n / 10;
+	   }
+	   return retNumber;
+   }
+
+   /*
+		把数组排成最小的数
+   */
+   string PrintMinNumber(vector<int> numbers)
+   {
+	   
+   }
+
+   /*
+	 把只包含因子2、3和5的数称作丑数（Ugly Number）。
+	 例如6、8都是丑数，但14不是，因为它包含因子7。
+	 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
+	 分析:(1)从1开始求出所有index的丑数。丑数判断用fator2，3，5
+   */
+   int GetUglyNumber_Solution(int index) \
+   {
+	   if (index < 1) return 0;
+	   int times = 0;
+	   int num = 1; //初始值
+	   for (; times < index; num++)
+	   {
+		   if (IsUgly(num))
+		   {
+			   times++;
+			   printf(" The index :%d   num: %d  \n", index, num);
+		   }
+	   }
+	   return num;
+   }
+
+   bool IsUgly(int number)
+   {
+	   while (number % 2 == 0) number = number / 2;
+	   while (number % 3 == 0) number = number / 3;
+	   while (number % 5 == 0) number = number / 5;
+
+	   if (number ==  1)
+	   {
+		   return true;
+	   }
+	   else 
+	   {
+		   return false;
+	   }
+   }
+
+   //理解dp
+   int GetUglyNumber_DP(int index) {
+	   if (index <= 0) return 0;
+	   if (index == 1) return 1;
+	   vector<int>k(index); k[0] = 1;
+	   int t2 = 0, t3 = 0, t5 = 0;
+	   for (int i = 1; i<index; i++) {
+		   k[i] = min(k[t2] * 2, min(k[t3] * 3, k[t5] * 5));
+		   if (k[i] == k[t2] * 2) t2++;
+		   if (k[i] == k[t3] * 3) t3++;
+		   if (k[i] == k[t5] * 5) t5++;
+	   }
+	   return k[index - 1];
+   }
+
+   /*
+      第一个只出现一次的字符 .
+	  在一个字符串(1<=字符串长度<=10000，
+	  全部由大小写字母组成)中找到第一个只出现一次的字符,并返回它的位置. 
+	  分析：用一个数组存储出线过字符的次数，输出第一个一次的。
+	  避免O(n2)算法，利用哈希表，存储出线字符的次数
+   */
+   int FirstNotRepeatingChar(string str) 
+   {
+	   if (str.empty()) return -1;
+
+	   int hash[256] = { 0 };
+	   
+	   
+	   for(int i = 0; i < str.length();++i)
+	   {
+		   hash[str[i]] += 1;  //次数加1；
+	   }
+	   
+	   for(int	 i = 0 ; i <str.length();++i)
+	   {
+		   if (hash[str[i]] == 1) return i;
+	   }
+	   return -1;
+   }
+
+   //是否是大端模式判断；
+   //方式一：强制类型转换
+   bool IsBig_endian()
+   {
+	   int a = 0x12345678;
+	   //printf("%#x", char(a));
+
+	   for (size_t i = 0; i < 4; i++)
+	   {
+		   printf("%#x ----%p \n", *((char*)(&a) + i), (char*)&a + i);
+	   }
+	   if (*(char*)(&a) == 0x78)
+	   {
+		   printf("big_endian\n");
+		   return true;
+	   }
+	   else
+	   {
+		   printf("little_endian\n");
+		   return false;
+	   }
+   }
+   //利用共同体所有数据均从同一位置开始存储
+   bool IsBIg_endian_byUnion()
+   {
+	   union endianTest
+	   {
+		   int data;
+		   char ch;
+	   };
+	   endianTest test;
+	   test.data = 0x12345678;
+	   printf("%d  \n",sizeof(test));
+	   if (test.ch == 0x78)
+	   {
+		   printf("big_endian\n");
+		   return true;
+	   }
+	   else
+	   {
+		   printf("little_endian\n");
+		   return false;
+	   }
+   }
 
 
 
@@ -1163,11 +1420,13 @@ bool TestNewSolution()
 	//std::cout<< a << b << c << std::endl;
 
 	//输出最小的k个树
-	int array[] = { 4, 5, 1, 6, 2, 7, 3, 8 };
-	int arrLen = sizeof(array) / sizeof(int);
-	std::vector<int> vecInput = std::vector<int>(array, array + arrLen);
-	std::vector<int> retvec = solutionIns.GetLeastNumbers_Solution(vecInput, 4);
-
+	//int array[] = { 4, 5, 1, 6, 2, 7, 3, 8 };
+	//int arrLen = sizeof(array) / sizeof(int);
+	//std::vector<int> vecInput = std::vector<int>(array, array + arrLen);
+	//std::vector<int> retvec = solutionIns.GetLeastNumbers_Solution(vecInput, 4);
+    
+	solutionIns.IsBig_endian();
+	solutionIns.IsBIg_endian_byUnion();
 	
 
 
