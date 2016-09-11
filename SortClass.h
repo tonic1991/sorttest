@@ -201,7 +201,7 @@ public:
 		if (low<high)
 		{
 			int pivotloc = Partition(a , low , high);
-			QuickSort( a , low , pivotloc);
+			QuickSort( a ,  low , pivotloc);
 			QuickSort( a,  pivotloc+1,high );		
 		}
 	}

@@ -1269,6 +1269,160 @@ void reOrderArray(std::vector<int> &array)
    }
 
 
+   /*
+		找到两个单链表的第一个公共节点
+		（1）暴力法：list1遍历每一个节点遍历一次第二个节点，这样判断。
+	    （2）使用辅助栈：两个栈存两个链表。反过来，一个一个判断是相等。
+		（3）第一次遍历，判断长度，长的先走N步，然后一个一个比较。
+   */
+   ListNode* FindFirstCommonNode(ListNode *pHead1, ListNode *pHead2) 
+   {
+	   ListNode* retList(0);
+	   if (pHead1 == NULL || pHead2 == NULL) return retList ;
+
+	   unsigned int lengthOne = GetListLength(pHead1);
+	   unsigned int lengthTwo = GetListLength(pHead2);
+
+
+	   //赋值  注意pHeadLong需要指向较长的一个
+	   ListNode* pHeadLong  = pHead1;
+	   ListNode* pHeadShort = pHead2;
+	   unsigned int diffLength = lengthOne > lengthTwo ? lengthOne - lengthTwo : lengthTwo - lengthOne;
+	   if (lengthTwo >lengthOne)
+	   {
+		   ListNode* pHeadLong = pHead2;
+		   ListNode* pHeadShort = pHead1;
+	   }
+
+	   for (unsigned i = 0; i < diffLength; i++)
+	   {
+		   pHeadLong = pHeadLong->next;
+	   }
+	   //一起往后走
+	   while (pHeadLong!=NULL&&pHeadShort!=NULL&& pHeadLong!= pHeadShort)
+	   {
+		   pHeadLong = pHeadLong->next;
+		   pHeadShort = pHeadShort->next;
+	   }
+	   
+	   retList = pHeadLong;
+	   return retList;
+	   
+   }
+
+   unsigned int GetListLength(ListNode* Head)
+   {
+	   ListNode* pNode= Head;
+	   unsigned int length = 0;
+	   while (pNode)
+	   {
+		   ++length;
+		   pNode = pNode->next;
+	   }
+	   return length;
+   }
+
+   /*
+	统计一个数字在排序数组中出现的次数。
+	1. 利用stl；
+	2. 二分法找重复数组的第一个和最后一个(在相等的时候再做判断+1)
+   */
+   int GetNumberOfK(vector<int> data, int k) 
+   {
+	   std::vector<int>::iterator ita =  std::find(data.begin(), data.end(), k);
+	   int times = 0;
+	   
+	   while (ita != data.end() && *ita == k )  //防止越界；
+	   {
+		   ++ita;
+		   ++times;
+	   }
+
+	   //return std::count(data.begin(), data.end(), k);
+	   return times;
+   }
+
+   /*
+      求：  二叉树的深度。
+	  分析:递归，找左右
+	*/
+   int TreeDepth(TreeNode* pRoot)
+   {
+	   if (pRoot == NULL) return 0;
+
+	   int left  = TreeDepth(pRoot->left);
+	   int right = TreeDepth(pRoot->right);
+
+	   return left > right ? left + 1 : right + 1;
+   }
+
+   /*
+	  判断该树属否是平衡二叉树；
+	  (1) 分析：递归查找左右深度，如果高度大于一返回false,；递归左右子树
+	  (2) 
+   */
+   bool IsBalanced_Solution(TreeNode* pRoot) 
+   {
+	   if (pRoot == NULL) return true;
+
+	   int left = TreeDepth(pRoot->left);
+	   int right = TreeDepth(pRoot->right);
+
+	   if ((left - right) > 1 || (left - right) < -1)  return false;
+	   
+	   return IsBalanced_Solution(pRoot->left) && IsBalanced_Solution(pRoot->right);
+   }
+
+   /*
+	  数组中只出现一次的数字 :一个整型数组里除了两个数字之外，
+	  其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。
+	  分析：利用异或性质
+   */
+   void FindNumsAppearOnce(vector<int> data, int* num1, int *num2) 
+   {
+	   if (data.empty() || data.size() < 2) return;  //错误返回;
+
+	   int xorTemp = 0;
+	   for (size_t i = 0; i < data.size(); i++)
+	   {
+		   xorTemp ^= data[i];  //得到最后的xor
+	   }
+
+	   //如何分为两个数？
+	   int flag = 1;
+	   while ( (xorTemp&flag) == 0)  //即将flag还原为xor?
+	   {
+		   flag <<= 1;  //左移一位
+	   }
+
+	   *num1 = xorTemp;
+	   *num2 = xorTemp;
+
+	   for (int i = 0; i < data.size(); ++i)
+	   {
+		   if ((flag & data[i]) == 0)  //如果在该位flag位为0；
+		   {
+			   *num2 ^= data[i];       //相与
+		   }
+		   else
+		   {
+			   *num1 ^= data[i];
+		   }
+	   }
+    }
+	   /*
+		  和为S的连续正数序列；
+	   */
+	   vector<vector<int> > FindContinuousSequence(int sum) 
+	   {
+
+	   }
+
+
+  
+
+
+
 
 };  
 
