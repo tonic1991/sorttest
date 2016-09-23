@@ -10,8 +10,9 @@
 #include <set>
 #include <map>
 #include<functional>
+#include<iterator>  //ostream_iterator
 
-
+using namespace std;
 /*
 newcoder solutions
 */
@@ -38,6 +39,8 @@ public:
     /*
         大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项。
         n<=39 
+		分析：不能用递归，层数太多，用两个数迭代相加模拟斐波拉契数列；
+		不能用int，否则大数无力；用string模拟
     */
     int Fibonacci(int n) {
     	if (n < 0)
@@ -65,6 +68,91 @@ public:
     		return result;
     	}
     }
+
+	//大数相加
+	string addStr(string str1, string str2)
+	{
+		if (str1.size() < str2.size())  //swap 
+		{
+			str1.swap(str2);
+		}
+
+		for (int i = str1.size() - 1, j = str2.size() - 1; i >= 0; --i, --j)
+		{
+			str1[i] = str1[i] + (j >= 0 ? (str2[j] - '0') : 0);
+
+			if (str1[i] - '0' >= 10)
+			{
+				str1[i] = (str1[i] - '0') % 10 + '0';
+				if (i)
+				{
+					str1[i - 1]++;
+				}
+				else
+				{
+					str1 = "1" + str1;
+				}
+
+
+			}
+		}
+
+		return str1;
+	}
+    //斐波拉契数列，
+	int FibonaciiString()
+	{
+		string strNum;
+		string result;
+
+		//cin>>strNum;   
+		strNum = "10";
+
+		string tempStr = strNum;
+
+		int len = strNum.size();
+
+		if (len == 0)
+		{
+			printf("");
+			return -1;
+		}
+		if (strNum[len - 1] == '-')
+		{
+			printf("");
+			return -1;
+		}
+
+		string preFstNum = "0", preScdNum = "1";
+
+		string tempTimes = "2";
+
+		if (len == 1 && strNum[0] == '0')
+		{
+			printf("0");
+		}
+		else if (len == 1 && strNum[0] == '1')
+		{
+			printf("1");
+		}
+		else
+		{
+
+			while (tempTimes != strNum)
+			{
+				tempTimes = addStr(tempTimes, "1");
+				result = addStr(preFstNum, preScdNum);
+				preFstNum = preScdNum;
+				preScdNum = result;
+				cout << tempTimes << " : " << result << " " << endl;
+			}
+
+			cout << result << " " << endl;
+		}
+
+		return 0;
+	}
+
 
     /*
         一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
@@ -895,7 +983,7 @@ void reOrderArray(std::vector<int> &array)
 	   if (number == 0)
 	   {
 		   static int num = 1;
-		   printf("第%d个组合\t", num++);
+		   printf(" 第 %d 个组合 \t", num++);
 
 		   vector<char>::iterator iter = result.begin();
 		   for (; iter != result.end(); ++iter)
@@ -951,7 +1039,7 @@ void reOrderArray(std::vector<int> &array)
 
    int checkTheNumber(std::vector<int> numbers, int checkNum)
    {
-	   int times = 0;
+	   size_t times = 0;
 	   
 	   for (std::vector<int>::const_iterator ita = numbers.begin(); ita != numbers.end();++ita)
 	   {
@@ -1019,7 +1107,7 @@ void reOrderArray(std::vector<int> &array)
    std::vector<int> GetLeastNumbers_Solution(vector<int> input, int k) 
    {
 	   std::vector<int> leastNumbers;
-	   if (input.empty() || input.size() < k || k <= 0) return leastNumbers;
+	   if (input.empty() || (int)input.size() < k || k <= 0) return leastNumbers;
 
 	   int low = 0; 
 	   int high = input.size() -1;
@@ -1046,14 +1134,14 @@ void reOrderArray(std::vector<int> &array)
    std::vector<int> GetLeastNumber(vector<int> input, int k)
    {
 	   std::vector<int> leastVec;
-	   if (input.empty() || input.size() < k || k <= 0) return std::vector<int>();
+	   if (input.empty() || (int)input.size() < k || k <= 0) return std::vector<int>();
 
 	   //仿函数greater<int> 从大到小排序
 	   std::multiset<int , std::greater<int>> leastSet;
 
 	   for (vector<int>::iterator ita = input.begin() ; ita!=input.end();++ita)
 	   {
-		   if (leastSet.size()<k)
+		   if (static_cast<int>(leastSet.size())<k)
 		   {
 			   leastSet.insert(*ita);
 		   }
@@ -1211,12 +1299,12 @@ void reOrderArray(std::vector<int> &array)
 	   int hash[256] = { 0 };
 	   
 	   
-	   for(int i = 0; i < str.length();++i)
+	   for(size_t i = 0; i < str.length();++i)
 	   {
 		   hash[str[i]] += 1;  //次数加1；
 	   }
 	   
-	   for(int	 i = 0 ; i <str.length();++i)
+	   for(size_t	 i = 0 ; i <str.length();++i)
 	   {
 		   if (hash[str[i]] == 1) return i;
 	   }
@@ -1398,7 +1486,7 @@ void reOrderArray(std::vector<int> &array)
 	   *num1 = xorTemp;
 	   *num2 = xorTemp;
 
-	   for (int i = 0; i < data.size(); ++i)
+	   for (size_t i = 0; i < data.size(); ++i)
 	   {
 		   if ((flag & data[i]) == 0)  //如果在该位flag位为0；
 		   {
@@ -1410,18 +1498,275 @@ void reOrderArray(std::vector<int> &array)
 		   }
 	   }
     }
+
 	   /*
-		  和为S的连续正数序列；
+		  输入正整数sum，输出所有和为sum的序列
+		  分析：(1)设两个游标，初始化为1，2；如果中间的和小于S则增大high, 大于S则增大low,等于S则增大high；
+		  （2）考虑至少需要两个数，则small<(1+s)/2即可；
 	   */
 	   vector<vector<int> > FindContinuousSequence(int sum) 
 	   {
+		   vector<vector<int> > retVec;
+		   int middle = (1 + sum) / 2; //理解，两个数连着的不可能大于一半
+		   int low = 1, high = 2;
+		   vector<int> tempPath ;
+		   int currentSum = low + high;
+		     
+		   while (low < middle)
+		   {
+			   if (currentSum == sum)
+			   {
+				   for (int i = low; i <= high; i++)
+				   {
+					   tempPath.push_back(i);
+				   }
+				   retVec.push_back(tempPath);
+			   }
 
+			   if(currentSum > sum )
+			   {
+				   currentSum -= low;
+				   low++;
+				   if (currentSum == sum)
+				   {
+					   for (int i = low; i <= high; i++)
+					   {
+						   tempPath.push_back(i);
+					   }
+					   retVec.push_back(tempPath);
+				   }
+			   }
+			   if (currentSum <=sum)
+			   {
+				   tempPath.clear();
+				   high++;
+				   currentSum += high;
+			   }
+		   }
+		   return retVec;
+	   }
+
+	   /*
+	      翻转单词：“I am a student.”--“student. a am I”    
+		  分析：（1）可以考虑两次旋转法；第一次全Sentence单词，第二次次翻转部分；
+		  （）
+	   */
+	   string ReverseSentence(string str) 
+	   {
+		   size_t low = 0, high = str.size()-1;
+		   
+		   ReverseStr(str, low, high);
+
+		   for(high = 0; high < str.size(); )
+		   {
+			   if (str[high] != ' ')
+			   {
+				   ++high;
+			   }
+			   else if(str[high] == ' ' )
+			   {
+				   ReverseStr(str, low, high-1);
+
+				   low = high + 1;
+				   high ++;
+			   }
+			   //注意这里跟前面分开的原因在与ReverseStr该函数第三个参数输入不同
+			   if (high == str.size() - 1)
+			   {
+				   ReverseStr(str, low, high);
+
+				   low = high + 1;
+				   high++;
+			   }
+		   }
+		   return str;
+	   }
+
+	   void ReverseStr(string &str, int low, int high)
+	   {
+		   while (low < high)
+		   {
+			   char temp = str[low];
+			   str[low] = str[high];
+			   str[high] = temp;
+			   
+			   low++;
+			   high--;
+		   }
+	   }
+
+	   /*
+	      左旋转字符串  S=”abcXYZdef”,要求输出循环左移3位后的结果，即“XYZdefabc”
+		  (1)分析1：可以用两次翻转的办法，第一次先各自翻转，然后再整体翻转；
+		  （2）利用辅助空间？用strcpy.memcopy?
+	   */
+	   string LeftRotateString(string str, int n)
+	   {
+		   if (str.size()==0 || n <= 0||n>=(int)str.size() ) return str;
+
+		   int firstStart = 0;
+		   int firstEnd = n-1;
+		   int secondStart = n;
+		   int secondEnd = str.size()-1;
+
+		   ReverseStr(str, firstStart, firstEnd);
+		   ReverseStr(str, secondStart, secondEnd);
+
+		   ReverseStr(str, firstStart, secondEnd);
+		   return str;
+	   }
+	   
+
+	   /*
+	      扑克牌抽5张，判断是否是顺子。
+	      输入5个字符，判断起是否为顺子，其中大小王可以替代。1-K  => 1-13  0为大小王
+		  分析：求出
+	   */
+	   bool IsContinuous(vector<int> numbers) 
+	   {
+		   if (numbers.size() < 5) return false;
+
+		   int numberOfZero = 0;
+		   int numberOfGap = 0 ;
+
+
+		   numberOfZero =  count(numbers.begin(), numbers.end(), 0);
+
+		   int low = 0;
+		   int high = low + 1;  //表示后面一位数
+
+		   sort(numbers.begin(), numbers.end());  //排序
+
+		   for (size_t i = 0; i < numbers.size(); ++i)
+		   {
+			   if (numbers[i] > 0)
+			   {
+				   if (numbers[low] == numbers[high]) return false;   //相等直接错误，且下面的if不能处理相等情况
+
+				   if (numbers[high] - numbers[low] > 1)  //从非0开始  
+				   {
+					   numberOfGap += (numbers[high] - numbers[low] - 1);
+				   }
+			   }
+
+			   low++;
+			   high++;
+		   }
+
+		   return numberOfZero >= numberOfGap ? true : false;
+	   }
+
+	   /*
+	      0 -- n-1 从数字0开始，【每次均删除】圆圈里的第m个数，求圈里剩下的最后一个数字；
+		  分析：（1）可以模拟一个环形链表；每次迭代器扫面到末尾的时候，将迭代器移到第一个数；
+		  （2）参考环形结构用  从第m个开始考虑, pos = (m-1+pos)%size;
+	   */
+	   int LastRemaining_Solution(unsigned int n, unsigned int m)
+	   {
+		   if (n <= 0 ) return -1;
+
+		   vector<int> vec;
+
+		   for (unsigned int i = 0; i < n; ++i)  //赋值，初始化
+		   {
+			   vec.push_back(i);
+		   }
+		   
+		   int pos = 0;
+		   while (vec.size() > 1)
+		   {
+			   int size = vec.size();
+
+			   copy(vec.begin(), vec.end(), ostream_iterator<int>(cout, " "));
+
+			   cout << endl;
+			   pos = (m-1+pos) % size;
+
+			   vector<int>::iterator ia = vec.begin() + pos ;
+
+
+			   vec.erase(ia);
+		   }
+		   return vec.back();
+	   }
+
+	   
+	   /*
+	       不用乘除法for while等，求1+2+3+···+n
+		   分析：（1）用构造函数：通过构造函数中的静态变量完成累加;
+		   （2）虚函数：
+		   （3）函数指针：
+		   （4）模版类型：
+		   （5）短路特性与递归
+	   */
+	    
+	   class nTemp
+	   {
+	   public: 
+		   
+		   nTemp() { ++N;    sum += N; }
+
+		   static int getSum() { return sum;  }
+
+		   static void reset() { N = 0; sum = 0; }
+
+	   private:
+		   static int N  ;
+		   static int sum ;
+
+	   };	   
+
+	   //int nTemp::N = 0;
+	   //int nTemp::sum = 0;
+
+	   int Sum_Solution_constructor(int n) 
+	   {
+		   nTemp::reset();
+		   nTemp *a = new nTemp[n];
+		   
+		   return nTemp::getSum();
+	   }
+
+	   //利用短路与递归
+	   int Sum_Solution_Rec(int n)
+	   {
+		   if (n < 0) return -1;
+		   int sum = n;
+		   sum > 0 && (sum += Sum_Solution_Rec(n - 1));   //利用短路与递归
+		   return sum;
 	   }
 
 
-  
+	   /*
+	      在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。
+		  请找出数组中任意一个重复的数字。 例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是重复的数字2或者3。
+	   */
+	   bool duplicate(int numbers[], int length)
+	   {
+		   //考虑用数组模拟，出线过置一，没有出线过返回0
+		   vector<int> vec;
 
+		   int *hastArr = new int[length];
+		   for (int i = 0; i < length; ++i)
+		   {
+			   hastArr[i] = 0;
+		   }   
 
+		   for (int i = 0; i < length; ++i)  //初始化has
+		   {
+			   if (hastArr[numbers[i]] == 0)
+			   {
+				   hastArr[numbers[i]] = 1;
+			   }
+			   else
+			   {
+				   vec.push_back(numbers[i]);
+			   }			   
+		   }
+		   copy(vec.begin(), vec.end(), ostream_iterator<int>(cout," ") );
+
+		   return vec.empty() ? false : true;
+	   }
 
 
 };  
@@ -1582,9 +1927,18 @@ bool TestNewSolution()
 	solutionIns.IsBig_endian();
 	solutionIns.IsBIg_endian_byUnion();
 	
+	solutionIns.ReverseSentence("Wonderful");
 
 
+	solutionIns.LastRemaining_Solution(5, 3);
+
+
+	cout<<endl;
+	int number[] = { 2,3,1,0,2,5,3 } ;
+	solutionIns.duplicate(number, 7);
 	//solutionIns.
+
+
 	return true;
 	//
 }
