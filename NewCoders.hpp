@@ -81,16 +81,16 @@ public:
 		{
 			str1[i] = str1[i] + (j >= 0 ? (str2[j] - '0') : 0);
 
-			if (str1[i] - '0' >= 10)
+			if (str1[i] - '0' >= 10)  //处理进位
 			{
 				str1[i] = (str1[i] - '0') % 10 + '0';
-				if (i)
-				{
-					str1[i - 1]++;
+				if (i)  //如果i不为第一位
+				{   
+					str1[i - 1]++;   //直接前一位加1
 				}
 				else
 				{
-					str1 = "1" + str1;
+					str1 = "1" + str1;   //首位则前面贴个"1"
 				}
 
 
@@ -141,6 +141,7 @@ public:
 			while (tempTimes != strNum)
 			{
 				tempTimes = addStr(tempTimes, "1");
+
 				result = addStr(preFstNum, preScdNum);
 				preFstNum = preScdNum;
 				preScdNum = result;
@@ -156,13 +157,14 @@ public:
 
     /*
         一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+		//long long
     */
     int jumpFloor(int number) {
         if (number < 0)
         {
             return -1;
         }
-        int preFstNum = 0 ,preScdNum = 1 , preScdNumTwo = 2;
+        int preFstNum = 0 ,preScdNum = 1 , preScdNumTwo = 1;
         int result = 0;
         if (number == 0)
         {
@@ -171,12 +173,9 @@ public:
         else if (number == 1)
         {
             return preScdNum;
-        }else if (number == 2)
-        {
-            return preScdNumTwo;
         }
-        {
-            for (int i = 3; i <= number; ++i)
+        
+            for (int i = 2; i <= number; ++i)
             {
                 result = preScdNum + preScdNumTwo;
                 preScdNum = preScdNumTwo;
@@ -184,7 +183,7 @@ public:
             }
 
             return result;
-        }
+        
 
     }
 
@@ -371,7 +370,7 @@ public:
 		输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
 		例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
 		中序遍历的根节点位置在中间p
-		*/
+	*/
 struct TreeNode* reConstructBinaryTree(std::vector<int> pre, std::vector<int> in)
 {
 	int inSize = in.size();
@@ -541,7 +540,8 @@ void reOrderArray(std::vector<int> &array)
    }
 
    /*
-   递归的方法其实是非常巧的，它利用递归走到链表的末端，然后再更新每一个node的next 值 ，实现链表的反转。而newhead 的值没有发生改变，为该链表的最后一个结点，所以，反转后，我们可以得到新链表的head。
+   递归的方法其实是非常巧的，它利用递归走到链表的末端，然后再更新每一个node的next 值 ，实现链表的反转。
+   而newhead 的值没有发生改变，为该链表的最后一个结点，所以，反转后，我们可以得到新链表的head。
    注意关于链表问题的常见注意点的思考：
    1、如果输入的头结点是 NULL，或者整个链表只有一个结点的时候
    2、链表断裂的考虑
@@ -622,10 +622,11 @@ void reOrderArray(std::vector<int> &array)
 	   ListNode* node=NULL;
 	   if(pHead1==NULL){return node=pHead2;}
 	   if(pHead2==NULL){return node=pHead1;}
-	   if(pHead1->val>pHead2->val){
+	   if(pHead1->val > pHead2->val){
 		   node=pHead2;
-		   node->next=MergeRec(pHead1,pHead2->next);
-	   }else
+		   node->next = MergeRec(pHead1,pHead2->next);
+	   } 
+	   else
 	   {
 		   node=pHead1;
 		   node->next=MergeRec(pHead1->next,pHead2);
@@ -1683,8 +1684,7 @@ void reOrderArray(std::vector<int> &array)
 			   pos = (m-1+pos) % size;
 
 			   vector<int>::iterator ia = vec.begin() + pos ;
-
-
+			   
 			   vec.erase(ia);
 		   }
 		   return vec.back();
@@ -1741,7 +1741,7 @@ void reOrderArray(std::vector<int> &array)
 	      在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。
 		  请找出数组中任意一个重复的数字。 例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是重复的数字2或者3。
 	   */
-	   bool duplicate(int numbers[], int length)
+	   bool duplicate(int numbers[], int length ,int* duplication = NULL) //找任意一个重复数字
 	   {
 		   //考虑用数组模拟，出线过置一，没有出线过返回0
 		   vector<int> vec;
@@ -1765,6 +1765,7 @@ void reOrderArray(std::vector<int> &array)
 		   }
 		   copy(vec.begin(), vec.end(), ostream_iterator<int>(cout," ") );
 
+		   //*duplication
 		   return vec.empty() ? false : true;
 	   }
 

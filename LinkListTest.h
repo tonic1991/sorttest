@@ -12,6 +12,7 @@ struct LNode
 	LNode *next;
 	LNode():next(NULL){}
 	LNode(int x):data(x),next(NULL){}
+
 };
 
 
@@ -75,8 +76,7 @@ bool LinkList::display(LNode* linkList)
 
 //建立带头结点的linklist  借用两个head tail
 bool LinkList::createLinkList(LNode* linkList ,int n ,int i )
-{
-	
+{	
 	cout<<"input the length of linkList"<<endl;
 
 	//int n = 8;
@@ -116,13 +116,13 @@ bool LinkList::deleteLinkList(LNode* linkList , int x)
 		printf("linklist is null \r\n\t");
 		return false;
 	}
-	LNode * p ,*q;
+	LNode *p ,*q;
 	p = linkList;
-	while (p->next==NULL&&p->next->data!=x)
+	while (p->next!=NULL&&p->next->data!=x)
 	{
 		p = p->next;
 	}
-	if (p->next!=NULL)
+	if (p->next!= NULL)
 	{
 		q = p->next;
 		p->next=q->next;
@@ -146,7 +146,7 @@ bool LinkList::MergeLinkList(LNode* La,LNode* Lb,LNode* Lc)
 	LNode *pa = La , *pb = Lb;
 	LNode *head,*tail;
 	head = Lc;
-	while(pa->next!=NULL && pb->next!=NULL)
+	while(pa->next!=NULL && pb->next!=NULL)  //这个有问题？next那么就会带头结点了，应该直接判断pa&&pb
 	{
 		if (pa->next->data<=pb->next->data)
 		{

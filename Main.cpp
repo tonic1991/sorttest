@@ -38,7 +38,8 @@ void main()
    const int n = 8;
    int a[n] = {49,38,65,97,76,13,27,49}; 
   
-  //sortClass.InsertSort(a,8);
+//  sortClass.InsertSort(a,8);
+// sortClass.InsertSortErFen(a, 8);
    //int b[n] = {1,2,3,4,5,6,7,8};
    //cout<<sortClass.dichotomy(b,8,4)<<endl;   //¶þ·Ö²éÕÒ
   // sortClass.ShellSort(a,8);
@@ -52,7 +53,7 @@ void main()
 
 //   sortClass.QuickSort(a,0,7);
 
-  // sortClass.MergeSort(a,n);  //¹é²¢ÅÅÐò
+   sortClass.MergeSort(a,n);  //¹é²¢ÅÅÐò
 
 
    //LinkList²âÊÔ

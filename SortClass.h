@@ -59,7 +59,7 @@ public:
 	//直接插入排序：将一个记录插入到已经排好序的有序表中, 从而得到一个新的,记录数增1的有序表
 	//要点：设立哨兵，作为临时存储和判断边界
 	//复杂度 O(n2)
-	void InsertSort(int a[], int n)		
+	void InsertSort(int a[], int n)		//升序
 	{	
 		cout<<"InsertSort Test:  "<<endl;
 		for (int i =1 ; i<n ; i++ )
@@ -74,15 +74,49 @@ public:
 					a[j+1] = a[j];
 					j--;
 				}
-				a[j+1] = temp;
+				a[j+1] = temp;  //若temp>=a[i] 所以用a[j+1] = temp;
 			}
 			print(a,n,i);
 		}
 		cout<<endl;
-
-
-
 	}
+
+	//二分法改进插入排序 ,减少比较次数
+	void InsertSortErFen(int a[], int n)		//升序
+	{
+		cout << "InsertSort erfen Test:  " << endl;
+		for (int i = 1; i<n; i++)
+		{
+			if (a[i]<a[i - 1])
+			{
+				int temp = a[i];     //复制为哨兵
+				int j = i - 1;		//
+				
+				int low = 0, high = i - 1 , num = 0;
+				
+				while (a[low] < a[high])
+				{
+					int mid = ((high - low) >> 1) + low;
+					if (a[mid] > temp)
+						high = mid - 1;
+					if (a[mid] < temp)
+						low = mid + 1;
+				}
+				num = i - low; //移动几步
+				while (num >0)  //查找插入位置
+				{
+					a[j + 1] = a[j];
+					j--;
+					num--;
+				}
+				a[j + 1] = temp;  //若temp>=a[i] 所以用a[j+1] = temp;
+			}
+			print(a, n, i);
+		}
+		cout << endl;
+	}
+
+
 
 
 	//希尔排序：：缩小增量法      增量序列d = {n/2 ,n/4, n/8 .....1} n为要排序数的个数
@@ -94,6 +128,8 @@ public:
 
 		while (dk>=1)
 		{
+
+		    //一趟希尔排序
 			for (int i = 0;i <dk ; i++)
 			{
 				for (int j = i +dk ; j<n ; j += dk	)
@@ -114,7 +150,7 @@ public:
 				print(a,n,i);
 			}
 
-			dk = dk/2;
+			dk = dk/2;  //结束循环条件
 		}   
 	}
 
@@ -133,7 +169,7 @@ public:
 
 				if (a[j]< a[temp])
 				{
-					temp = j;
+					temp = j;         //维护最小值
 				}
 			}
 			int tempValue;
@@ -196,9 +232,10 @@ public:
 	//2）通过一趟排序讲待排序的记录分割成独立的两部分，其中一部分记录的元素值均比基准元素值小。另一部分记录的 元素值比基准值大。
 	//3）此时基准元素在其排好序后的正确位置
 	//4）然后分别对这两部分记录用同样的方法继续进行排序，直到整个序列有序。
+	//5）high-low >k 使基本有序以后，用插入排序
 	void QuickSort(int a[], int low , int high	)
 	{
-		if (low<high)
+		if (low < high)  //这是做什么的？
 		{
 			int pivotloc = Partition(a , low , high);
 			QuickSort( a ,  low , pivotloc);
@@ -213,13 +250,16 @@ public:
 		{
 			while (low<high && a[high] >= privotKey)  {--high;}
 			swap(&a[low],&a[high]);
-			while (low<high && a[low]<= privotKey) {  ++low;}
+			while (low<high && a[low]<= privotKey) {  ++low; }
 			swap(&a[low],&a[high]);	
 		}
 
 		print(a,8,0);
 		return low;
 	}
+
+
+
 	//合并两个数组成有序
 	void MergeArray(int a [], int first, int mid, int last ,int temp[] )
 	{
@@ -265,7 +305,7 @@ public:
 			mergeSort(a , first ,mid ,temp);          //递归拆分左边数组
 			mergeSort(a , mid+1 , last ,temp);		  //拆分右数组
 			MergeArray(a , first , mid , last ,temp);    //合并数组
-			//print(a ,8,0);
+			print(a ,8,0);
 		}
 	}
 	//调用递归 归并排序的方法

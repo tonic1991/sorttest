@@ -90,7 +90,7 @@ bool SqListClass::initSqList(SqList &sqList)
 {
 
 	sqList.elem =(int*)malloc(LIST_INIT_SIZE*sizeof(int));
-	if (sqList.elem==NULL)
+	if (sqList.elem == NULL)
 	{
 		return false;
 	}else
@@ -103,7 +103,7 @@ bool SqListClass::initSqList(SqList &sqList)
 
 bool SqListClass::insertSqList(SqList& sqList , int pos , int e)
 {
-	if (pos<0||sqList.elem==NULL){ printf("insert false") ; return false; } 
+	if (pos<0||sqList.elem==NULL){ printf("insert false") ; return false;} 
 	if(sqList.lenth>=sqList.listsize)
 	{
 		int* newbase = (int*)realloc(sqList.elem,(SQLIST_INCTEASEMRNT+sqList.lenth)*sizeof(int));
@@ -123,7 +123,7 @@ bool SqListClass::insertSqList(SqList& sqList , int pos , int e)
 
 bool SqListClass::traverseList(SqList L)
 {
-	if (L.elem==NULL||L.lenth==0)return false;
+	if (L.elem==NULL||L.lenth==0)  return false;
 
 		printf("L .length = %d  \r\n\t" ,L.lenth);
 		int pos = 0;
