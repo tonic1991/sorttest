@@ -233,9 +233,15 @@ public:
 	//3）此时基准元素在其排好序后的正确位置
 	//4）然后分别对这两部分记录用同样的方法继续进行排序，直到整个序列有序。
 	//5）high-low >k 使基本有序以后，用插入排序
+	void swap(int& a, int& b)
+	{
+		int temp = a;
+		a = b;
+		b = temp;
+	}
 	void QuickSort(int a[], int low , int high	)
 	{
-		if (low < high)  //这是做什么的？
+		if (low < high)  // 判断返回
 		{
 			int pivotloc = Partition(a , low , high);
 			QuickSort( a ,  low , pivotloc);
@@ -248,10 +254,10 @@ public:
 		int	 privotKey = a[low];
 		while(low<high)
 		{
-			while (low<high && a[high] >= privotKey)  {--high;}
-			swap(&a[low],&a[high]);
-			while (low<high && a[low]<= privotKey) {  ++low; }
-			swap(&a[low],&a[high]);	
+			while (low<high && a[high] >= privotKey) { --high; }
+			swap(a[low], a[high]);
+			while (low<high && a[low] <= privotKey) { ++low; }
+			swap(a[low], a[high]); 			
 		}
 
 		print(a,8,0);
@@ -291,7 +297,6 @@ public:
 		{
 			a[first + index] = temp[index];
 		}
-
 	}
 
 

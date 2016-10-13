@@ -18,6 +18,8 @@
 
 #include "NewCoders.hpp"
 
+#include "ArrayInitTest.h"
+
 using namespace std;
 
 
@@ -51,9 +53,9 @@ void main()
   // sortClass.BubbleSort_pos(a,8);  
 
 
-//   sortClass.QuickSort(a,0,7);
+   sortClass.QuickSort(a,0,7);
 
-   sortClass.MergeSort(a,n);  //πÈ≤¢≈≈–Ú
+   //sortClass.MergeSort(a,n);  //πÈ≤¢≈≈–Ú
 
 
    //LinkList≤‚ ‘
@@ -103,6 +105,13 @@ void main()
 
    //--test-newcoder
    TestNewSolution();
+
+
+
+   TestArrayInit();
+
+
+   
 
    system("pause");
 

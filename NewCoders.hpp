@@ -306,6 +306,8 @@ public:
 		}
 		int lengthNew = lenthOld + 2 * count -1;  //1+2->3 -1 dute to from zero;
 		
+		//空间没有分配导致出问题？
+
 		for (int i = lenthOld - 1; i >= 0 && lengthNew != i; --i)
 		{
 			if (str[i] == ' ')
@@ -318,7 +320,6 @@ public:
 			{
 				str[lengthNew--] = str[i];
 			}
-			
 		}
 		std::cout << "\n print relpaceStr: \n";
 		int lentghUptodate = strlen(str);
@@ -434,7 +435,7 @@ void post_tree(TreeNode * Root)
 		输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。
 		例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
 		NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
-		*/
+*/
 int minNumberInRotateArray(std::vector<int> rotateArray)
 {
 	if (rotateArray.empty())
@@ -443,7 +444,7 @@ int minNumberInRotateArray(std::vector<int> rotateArray)
 	}
 	int mid, left = 0, right = rotateArray.size() - 1;
 	//根据特点用二分法找
-	while (right - left != 1)
+	while (right - left != 1)  //找
 	{
 		mid = left + (right - left) / 2;
 		if (rotateArray[left] <= rotateArray[mid])
@@ -1325,12 +1326,12 @@ void reOrderArray(std::vector<int> &array)
 	   }
 	   if (*(char*)(&a) == 0x78)
 	   {
-		   printf("big_endian\n");
+		   printf("little_endian\n");
 		   return true;
 	   }
 	   else
 	   {
-		   printf("little_endian\n");
+		   printf("big_endian\n");
 		   return false;
 	   }
    }
@@ -1347,12 +1348,12 @@ void reOrderArray(std::vector<int> &array)
 	   printf("%d  \n",sizeof(test));
 	   if (test.ch == 0x78)
 	   {
-		   printf("big_endian\n");
+		   printf("little_endian\n");
 		   return true;
 	   }
 	   else
 	   {
-		   printf("little_endian\n");
+		   printf("big_endian\n");
 		   return false;
 	   }
    }
@@ -1598,7 +1599,7 @@ void reOrderArray(std::vector<int> &array)
 
 	   /*
 	      左旋转字符串  S=”abcXYZdef”,要求输出循环左移3位后的结果，即“XYZdefabc”
-		  (1)分析1：可以用两次翻转的办法，第一次先各自翻转，然后再整体翻转；
+		  （1）分析1：可以用两次翻转的办法，第一次先各自翻转，然后再整体翻转；
 		  （2）利用辅助空间？用strcpy.memcopy?
 	   */
 	   string LeftRotateString(string str, int n)

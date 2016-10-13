@@ -66,8 +66,8 @@ bool testStack()
 
 bool StackClass::initStack(StackNode* S)
 {
-	 S->base = (int *)malloc(STACKINITSIZE*sizeof(StackNode));
-    if (S->base==NULL)
+	S->base = (int *)malloc(STACKINITSIZE*sizeof(StackNode));
+    if (S->base == NULL)
 	{
 		printf("Stack init error \r\n\t");
 		return false;
