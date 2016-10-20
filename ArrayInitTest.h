@@ -46,8 +46,10 @@ void stringArray()
 	char* str = "\x12\x34\x56\x78";
 	printf("\x12\x34\x56\x78 %x \n" ,*(int*)str);
 
-	char str1[] = { 0x56, 0x78, 0x12, 0x34 };
-	printf("%x", *(int*)str1);
+	char str1[] = { 0x56, 0x78, 0x12, 0x34 ,0x56};
+	printf("%x\n", *(int*)str1);
+
+	cout << "sizeof(str1) is: " << sizeof(str1) << endl;
 }
 
 

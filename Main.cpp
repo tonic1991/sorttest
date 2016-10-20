@@ -20,6 +20,8 @@
 
 #include "ArrayInitTest.h"
 
+#include "Derivate.h"
+
 using namespace std;
 
 
@@ -110,7 +112,7 @@ void main()
 
    TestArrayInit();
 
-
+   TestDerivate();
    
 
    system("pause");
