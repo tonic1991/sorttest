@@ -42,7 +42,7 @@ public:
 
 };
 
-class B : public A  //,public C
+class B : virtual public A  //,public C
 {
 public:
 	B() { cout << "B constructed!" << endl; }
@@ -70,7 +70,7 @@ void TestDerivate()
 	
 	A *a = new A();
 	a->Aout();
-	a->vAout();
+	a->vAout();  //a -v
 	A aaa;
 	cout << "sizeof(aaa) = :" << sizeof(aaa) << endl;
 	//delete a;

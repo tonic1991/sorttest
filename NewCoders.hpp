@@ -1337,6 +1337,7 @@ void reOrderArray(std::vector<int> &array)
    }
    //利用共同体所有数据均从同一位置开始存储
    bool IsBIg_endian_byUnion()
+
    {
 	   union endianTest
 	   {
